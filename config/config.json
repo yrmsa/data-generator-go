@@ -1,0 +1,142 @@
+{
+  "tables": [
+    {
+      "name": "cust",
+      "rows": 10,
+      "columns": [
+        {
+          "name": "cust_id",
+          "generator": { "increment": true }
+        },
+        {
+          "name": "name",
+          "generator": {
+            "random": {
+              "prefix": "user_",
+              "length": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "cust_personal",
+      "parent": "cust",
+      "rows_per_parent": 1,
+      "columns": [
+        {
+          "name": "cust_personal_id",
+          "generator": { "table_increment": true }
+        },
+        {
+          "name": "cust_id",
+          "generator": { "parent_key": "cust_id" }
+        },
+        {
+          "name": "gender",
+          "generator": { "hardcoded": "L" }
+        },
+        {
+          "name": "nickname",
+          "generator": {
+            "random": { 
+              "prefix": "nickname_",
+              "length": 7
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "cust_addr",
+      "parent": "cust_personal",
+      "rows_per_parent": 2,
+      "columns": [
+        {
+          "name": "cust_addr_id",
+          "generator": { "table_increment": true }
+        },
+        {
+          "name": "cust_personal_id",
+          "generator": { "parent_key": "cust_personal_id" }
+        },
+        {
+          "name": "address",
+          "generator": {
+            "random": {
+              "suffix": " Street",
+              "length": 12
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "cust_attr",
+      "parent": "cust_personal",
+      "rows_per_parent": 10,
+      "columns": [
+        {
+          "name": "cust_attrl_id",
+          "generator": { "table_increment": true }
+        },
+        {
+          "name": "cust_personal_id",
+          "generator": { "parent_key": "cust_personal_id" }
+        },
+        {
+          "name": "attr_key",
+          "generator": { 
+            "predefined_list": ["preference", "setting", "option", "config"]
+          }
+        },
+        {
+          "name": "attr_value",
+          "generator": {
+            "random": { "length": 6 }
+          }
+        }
+      ]
+    },
+    {
+      "name": "asset",
+      "rows": 2,
+      "columns": [
+        {
+          "name": "asset_id",
+          "generator": { "increment": true }
+        },
+        {
+          "name": "asset_name",
+          "generator": {
+            "random": {
+              "prefix": "asset_",
+              "length": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "asset_detail",
+      "parent": "asset",
+      "rows_per_parent": 1,
+      "columns": [
+        {
+          "name": "asset_detail_id",
+          "generator": { "table_increment": true }
+        },
+        {
+          "name": "asset_id",
+          "generator": { "parent_key": "asset_name" }
+        },
+        {
+          "name": "license_plat",
+          "generator": { 
+            "random": { "length": 6 }
+          }
+        }
+      ]
+    }
+  ]
+}
