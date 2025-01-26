@@ -161,7 +161,7 @@ Completed data generation for table: users
 ## Build Program Release
 1. Build the program:
    ```bash
-   go build -o ./dist/data-generator-v1.exe main.go
+   go build -o ./dist/data-generator.exe main.go
    ```
 2. Executable file can be found on `./dist` folder
 

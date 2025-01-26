@@ -146,7 +146,7 @@ func printAsciiArt() {
 		"██████╔╝██║  ██║   ██║   ██║  ██║    ╚██████╔╝███████╗██║ ╚████║███████╗██║  ██║██║  ██║   ██║   ╚██████╔╝██║  ██║",
 		"╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝     ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝",
 	}
-	subtitle := ":::: Data Generator v1 ::::\n"
+	subtitle := ":::: Data Generator v0.1 ::::\nhttps://github.com/yrmsa/data-generator-go\n"
 
 	boldWhite := color.New(color.FgHiWhite, color.Bold).SprintFunc()
 	boldCyan := color.New(color.FgHiCyan, color.Bold).SprintFunc()
@@ -160,7 +160,7 @@ func printAsciiArt() {
 
 func printExampleFileTree() {
 	tree := `
-data-generator-v1.exe
+data-generator.exe
 config
 └── schema.json
 `
