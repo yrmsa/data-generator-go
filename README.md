@@ -158,12 +158,30 @@ Table: users [=======================>] 1000/1000
 Completed data generation for table: users
 ```
 
-## Build Program Release
-1. Build the program:
-   ```bash
-   go build -o ./dist/data-generator.exe main.go
-   ```
-2. Executable file can be found on `./dist` folder
+## Build Process
+
+### Windows Systems
+```batch
+build.bat
+```
+
+### Linux/macOS Systems
+```bash
+# Set execute permissions
+chmod +x build.sh
+
+# Run build script
+./build.sh
+```
+
+### Build Output Structure
+```text
+dist/
+├── data-generator-arm64        # arm64 executable
+├── data-generator-linux        # Linux executable
+└── data-generator-windows.exe  # Windows executable
+```
+
 
 ## Contributing
 

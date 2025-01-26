@@ -128,7 +128,6 @@ func main() {
 	color.Green("\nFinish generating data. File can be found on %s folder\n", outputDir)
 	fmt.Println("Press 'Enter' to exit...")
 	reader.ReadString('\n')
-	os.Exit(0)
 }
 
 func handleGracefulExit(reader *bufio.Reader) {
