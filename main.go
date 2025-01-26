@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fatih/color"
 	"github.com/schollz/progressbar/v3"
 )
 
@@ -40,15 +41,25 @@ type Column struct {
 }
 
 func main() {
+	printAsciiArt()
+
 	reader := bufio.NewReader(os.Stdin)
 
 	configFolder := "./config"
 	fileList, err := listConfigFiles(configFolder)
 	if err != nil {
-		panic(fmt.Sprintf("Failed to list configuration files: %v", err))
+		color.Red("Error: The required 'config' folder is missing.\n")
+		color.Yellow("Expected folder structure: \n")
+		printExampleFileTree()
+		color.Yellow("Please create the above structure and try again.\n")
+		fmt.Println("Press 'Enter' to exit...")
+		reader.ReadString('\n')
+
+		// Exit gracefully
+		os.Exit(1)
 	}
 
-	fmt.Println("Available configuration files:")
+	color.Green("Available configuration files:")
 	for i, file := range fileList {
 		fmt.Printf("[%d] %s\n", i+1, file)
 	}
@@ -64,19 +75,21 @@ func main() {
 			selectedFile = fileList[choice-1]
 			break
 		} else {
-			fmt.Println("Invalid choice. Please enter a valid number.")
+			color.Yellow("Invalid choice. Please enter a valid number.")
 		}
 	}
 
 	configFilePath := filepath.Join(configFolder, selectedFile)
 	configFile, err := os.ReadFile(configFilePath)
 	if err != nil {
-		panic(fmt.Sprintf("Failed to read configuration file: %v", err))
+		color.Red("Failed to read configuration file: %v\n", err)
+		handleGracefulExit(reader)
 	}
 
 	var config Config
 	if err := json.Unmarshal(configFile, &config); err != nil {
-		panic(err)
+		color.Red("error when trying unmashall JSON\n%v\n", err)
+		handleGracefulExit(reader)
 	}
 
 	fmt.Print("Enter the output directory for the CSV files (default: ./output): ")
@@ -87,7 +100,8 @@ func main() {
 	}
 
 	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
-		panic(fmt.Sprintf("Failed to create output directory: %v", err))
+		color.Red("Failed to create output directory: %v", err)
+		handleGracefulExit(reader)
 	}
 
 	tableCounters := make(map[string]int)
@@ -111,7 +125,48 @@ func main() {
 		generateTableWithProgress(table, config.Tables, writers, tableCounters)
 	}
 
-	fmt.Printf("Finish generating data. Output can be found on %s folder", outputDir)
+	color.Green("\nFinish generating data. File can be found on %s folder\n", outputDir)
+	fmt.Println("Press 'Enter' to exit...")
+	reader.ReadString('\n')
+	os.Exit(0)
+}
+
+func handleGracefulExit(reader *bufio.Reader) {
+	fmt.Println("Press 'Enter' to exit...")
+	reader.ReadString('\n')
+	os.Exit(1)
+}
+
+func printAsciiArt() {
+	title := []string{
+		"██████╗  █████╗ ████████╗ █████╗      ██████╗ ███████╗███╗   ██╗███████╗██████╗  █████╗ ████████╗ ██████╗ ██████╗ ",
+		"██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗    ██╔════╝ ██╔════╝████╗  ██║██╔════╝██╔══██╗██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗",
+		"██║  ██║███████║   ██║   ███████║    ██║  ███╗█████╗  ██╔██╗ ██║█████╗  ██████╔╝███████║   ██║   ██║   ██║██████╔╝",
+		"██║  ██║██╔══██║   ██║   ██╔══██║    ██║   ██║██╔══╝  ██║╚██╗██║██╔══╝  ██╔══██╗██╔══██║   ██║   ██║   ██║██╔══██╗",
+		"██████╔╝██║  ██║   ██║   ██║  ██║    ╚██████╔╝███████╗██║ ╚████║███████╗██║  ██║██║  ██║   ██║   ╚██████╔╝██║  ██║",
+		"╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝     ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝",
+	}
+	subtitle := ":::: Data Generator v1 ::::\n"
+
+	boldWhite := color.New(color.FgHiWhite, color.Bold).SprintFunc()
+	boldCyan := color.New(color.FgHiCyan, color.Bold).SprintFunc()
+
+	for _, line := range title {
+		fmt.Println(boldWhite(string(line)))
+	}
+	fmt.Println(boldCyan(subtitle))
+	time.Sleep(1000 * time.Millisecond)
+}
+
+func printExampleFileTree() {
+	tree := `
+data-generator-v1.exe
+config
+└── schema.json
+`
+	boldCyan := color.New(color.FgHiCyan, color.Bold).SprintFunc()
+
+	fmt.Println(boldCyan(tree))
 }
 
 func listConfigFiles(folder string) ([]string, error) {

@@ -158,6 +158,13 @@ Table: users [=======================>] 1000/1000
 Completed data generation for table: users
 ```
 
+## Build Program Release
+1. Build the program:
+   ```bash
+   go build -o ./dist/data-generator-v1.exe main.go
+   ```
+2. Executable file can be found on `./dist` folder
+
 ## Contributing
 
 1. Fork the repository.
